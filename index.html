@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>서가 탐정 · Library Sorter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header><a class="brand" href="./index.html">▥ <span>서가 탐정<small>LIBRARY SORTER</small></span></a><span class="badge">2인 교대 플레이</span></header>
+  <main>
+    <section class="intro"><div><p class="eyebrow">THE LIBRARY CHALLENGE</p><h1>익숙한 책들 사이에서<br>어긋난 자리를 찾아보세요.</h1><p>인기대출도서 200권으로 채운 작은 도서관.<br>10개의 칸 중 하나를 열어 책의 청구기호를 살펴보세요.</p></div><div class="stats"><strong>200<span>권의 실제 도서</span></strong><strong>10<span>개의 서가 칸</span></strong><strong>20<span>권 / 칸</span></strong></div></section>
+    <section id="data-loader" class="workspace data-loader"><h2>도서 목록 불러오기</h2><p id="load-message" role="status">200권의 도서 목록을 불러오고 있습니다.</p><label for="catalog-file">books.json 선택</label><input id="catalog-file" type="file" accept=".json,application/json"></section>
+    <section id="game" class="workspace" hidden>
+      <div class="toolbar"><div><p class="eyebrow" id="phase-label"></p><h2 id="phase-title"></h2><p id="phase-help"></p></div><div id="controls" class="controls"></div></div>
+      <div class="legend"><span><i class="dot"></i> 색상은 분류 주제</span><span><i class="dot marked"></i> 선택 / 의심 표시</span><span class="direction">배열 방향: 한 단에서 → · 왼쪽 열 1~5 ↓ · 오른쪽 열 6~10 ↓</span></div>
+      <div id="shelves" class="shelves" aria-label="전체 서가"></div>
+      <p id="shelf-empty" class="shelf-empty">살펴볼 칸을 선택하세요. 20권의 책과 청구기호를 크게 볼 수 있습니다.</p>
+      <section id="inspector" class="inspector" aria-label="선택된 칸 확대 보기" hidden>
+        <div class="detail-heading"><div><p class="eyebrow">SHELF INSPECTOR</p><h2 id="shelf-title" tabindex="-1"></h2></div><div class="shelf-nav"><button id="prev-shelf" aria-label="이전 칸">← 이전 칸</button><button id="next-shelf" aria-label="다음 칸">다음 칸 →</button><button id="close-inspector">접기</button></div></div>
+        <p class="reading-order">왼쪽부터 번호순으로 읽으세요. 화면 폭에 따라 줄바꿈되며 모두 같은 칸의 책입니다.</p>
+        <div id="books" class="books"></div>
+      </section>
+      <p id="notice" role="status" aria-live="polite"></p>
+    </section>
+    <section id="results" class="results" hidden></section>
+    <section class="guide"><div><p class="eyebrow">HOW TO PLAY</p><h2>두 사람, 하나의 서가</h2></div><ol><li><strong>칸을 열고 순서 바꾸기</strong>책 두 권을 선택해 위치를 교환하세요. 다른 칸으로 이동해도 첫 번째 선택은 유지됩니다.</li><li><strong>화면 넘겨주기</strong>섞기를 마친 뒤 상대에게 화면을 넘깁니다. 선택 표시와 교환 횟수는 숨겨집니다.</li><li><strong>잘못 꽂힌 책 찾기</strong>칸을 확대해 청구기호를 비교하고, 의심되는 책을 표시한 뒤 채점하세요.</li></ol><p class="rule">정답은 ‘처음 정렬된 정확한 자리에서 벗어난 책’입니다. 분류번호 → 도서기호 → 권차 숫자순으로 배열합니다. 청구기호는 게임용으로 부여했으며, 원본에 KDC가 없는 6권은 임시 분류했습니다. 한 기기에서 두 사람이 번갈아 플레이합니다.</p></section>
+  </main><footer><span>도서 데이터: 국립중앙도서관 · 2026-11-19 제공 · 저작자표시(BY)<br>게임용 청구기호 및 서가 배치 추가</span><a href="https://lib2.ewha.ac.kr/newsletter/200312/tips.html" target="_blank" rel="noopener">배열 규칙 출처 ↗</a></footer>
+  <dialog id="handoff"><p class="eyebrow">READY FOR THE NEXT PLAYER</p><h2>이제 탐정의 차례입니다.</h2><p>섞은 사람은 화면을 상대에게 넘겨주세요.<br>준비되면 아래 버튼을 눌러 조사를 시작하세요.</p><button id="start-find">조사 시작하기 →</button></dialog>
+  <script src="app.js"></script>
+</body></html>

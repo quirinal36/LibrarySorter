@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#183f35">
+  <title>서가 렌즈 · Library Detector</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="./index.html" aria-label="서가 렌즈 홈"><span class="brand-icon" aria-hidden="true">▥</span><span>서가 렌즈<small>LIBRARY DETECTOR</small></span></a>
+    <a class="game-link" href="../index.html">서가 게임 열기 ↗</a>
+  </header>
+  <main>
+    <section class="intro">
+      <div><p class="eyebrow">CAMERA · OCR · MEDIAPIPE · AI</p><h1>청구기호의 흐름을 읽습니다.</h1><p>눈앞의 서가를 비추면 AI가 자료 배열 규칙에 따라 책의 순서를 살펴봅니다.</p></div>
+      <span class="source-pill">서가 배열 검사</span>
+    </section>
+
+    <div class="workspace">
+      <section class="viewer-panel" aria-labelledby="viewer-title">
+        <div class="panel-heading"><div><p class="eyebrow">01 / CAMERA</p><h2 id="viewer-title">한 칸을 화면에 담기</h2></div><span class="live-label"><i></i> 카메라 검사</span></div>
+        <div id="stage" class="stage">
+          <video id="camera" autoplay muted playsinline hidden aria-label="스마트폰 카메라 미리보기"></video>
+          <canvas id="frame" hidden aria-label="분석 중인 촬영 이미지"></canvas>
+          <canvas id="overlay" aria-label="도서 영역 및 위치 판정 표시"></canvas>
+          <div id="camera-placeholder" class="camera-placeholder"><span class="viewfinder" aria-hidden="true">▥</span><strong>청구기호를 비춰주세요</strong><p>책 아래쪽의 라벨이 선명하게 보이도록<br>정면에서 크게 담아주세요. 박스는 자동으로 찾습니다.</p><small>사진 파일로도 검사할 수 있습니다.</small></div>
+        </div>
+        <div class="legend" aria-label="판정 색상 안내"><span><i class="red"></i> 순서 오류</span><span><i class="green"></i> 관찰된 순서 일치</span><span><i class="yellow"></i> 판정 보류</span></div>
+        <div class="camera-actions"><button id="start-camera" class="primary">카메라 켜기</button><label class="file-button" for="image-input">사진 불러오기<input id="image-input" type="file" accept="image/*"></label><button id="stop-camera" disabled>카메라 끄기</button></div>
+        <div class="capture-actions"><button id="scan" class="primary scan-button" disabled>촬영하고 AI 검사</button><button id="resume-camera" disabled>다시 비추기</button></div>
+        <div class="status-box"><p id="status" role="status" aria-live="polite">카메라를 켜거나 검사할 사진을 선택해주세요.</p><progress id="progress" value="0" max="1" aria-label="인식 진행률"></progress><p id="model-status" class="model-status">서버 사진 검사는 촬영 후 Jetson에서 OCR을 수행합니다.</p></div>
+      </section>
+
+      <aside class="settings-panel" aria-labelledby="settings-title">
+        <div class="panel-heading"><div><p class="eyebrow">02 / INSPECTION SETTINGS</p><h2 id="settings-title">검사 방식과 영역</h2></div></div>
+        <div class="field"><label for="analysis-mode">검사 방식</label><select id="analysis-mode"><option value="jetson" selected>Jetson 서버 사진 검사</option><option value="ai">기기 OCR + Gadia AI (기존 방식)</option><option value="rules">규칙 비교만 (AI 아님)</option></select><p id="ai-status" class="field-help" role="status">AI 서버 연결을 확인하고 있습니다.</p></div>
+        <div class="field"><label for="server-url">Jetson 서버 주소</label><input id="server-url" type="url" placeholder="https://서버주소" autocomplete="off"><p class="field-help">Jetson에서 이 화면을 열었다면 비워두세요. 라운지에서는 서버 HTTPS 주소를 입력하세요.</p></div>
+        <div class="field"><label for="server-code">서버 접속 코드</label><input id="server-code" type="password" autocomplete="off"><p class="field-help">관리자가 제공한 접속 코드입니다. AI 서비스 비밀키를 입력하지 마세요. 코드는 저장하지 않습니다.</p></div>
+        <div class="field"><label for="camera-select">카메라 선택</label><select id="camera-select"><option value="">후면 카메라 자동 선택</option></select><p class="field-help">고해상도 후면 카메라를 우선 요청합니다. 초광각보다 기본 후면 렌즈를 선택하면 작은 글씨에 유리합니다.</p></div>
+        <div class="field" id="zoom-field" hidden><label for="camera-zoom">카메라 확대 · <output id="zoom-value">1</output></label><input id="camera-zoom" type="range" min="1" max="1" step="0.1" value="1"><p class="field-help">지원 기기에서만 표시됩니다. 과도한 디지털 확대는 글자를 더 선명하게 만들지 않습니다.</p></div>
+        <div class="quality-info"><p id="capture-quality" role="status">촬영 후 실제 입력 해상도를 표시합니다.</p><p id="ocr-quality">정밀 OCR: 분할 확대 → 명암 보정 → 라벨 재인식</p><p>한 번에 20권이 작게 보이면 5~10권씩 가까이 촬영하세요. 화면 반사와 손떨림을 줄이면 도움이 됩니다.</p></div>
+        <label class="checkbox-label"><input id="auto-scan" type="checkbox"><span>검사 후 자동 반복<small>같은 구도로 카메라를 고정해주세요.</small></span></label>
+        <p class="mode-note">서버 사진 검사는 촬영 사진을 Jetson으로 전송합니다. 서버에서 라벨을 읽고 Gadia AI가 배열 규칙을 판단합니다. 규칙 비교만 선택하면 기기 안에서 처리합니다.</p>
+        <button id="demo" class="demo-button">규칙 판정 데모 (OCR·AI 제외)</button>
+      </aside>
+    </div>
+
+    <section class="results-panel" aria-labelledby="results-title"><div class="panel-heading"><div><p class="eyebrow">03 / INSPECTION RESULTS</p><h2 id="results-title">이번 검사 결과</h2></div><span class="results-caption">현재 보이는 청구기호의 순서를 살펴봅니다</span></div><div class="metrics"><div><strong id="recognized-count">0</strong><span>인식한 책</span></div><div class="metric-wrong"><strong id="wrong-count">0</strong><span>순서 오류</span></div><div><strong id="unknown-count">0</strong><span>판정 보류</span></div></div><ol id="results" class="results-list" aria-live="polite"></ol></section>
+
+    <section class="guide" aria-label="사용 안내"><div><h2>또렷하게 읽는 작은 요령</h2><p>휴대폰을 가로로 들고 화면의 반사와 기울기를 줄여주세요. 청구기호가 작으면 카메라를 가까이 가져가거나 게임 화면을 확대하세요.</p></div><div><h3>청구기호와 배열 규칙으로 판단합니다</h3><p>한·영 OCR로 청구기호와 라벨 위치를 읽고, Gadia에는 배열 규칙과 OCR 문자열을 전달합니다. 정답 목록을 참조하거나 별도로 미세학습한 모델은 아니며, 판단이 불확실한 책은 노란색으로 표시합니다.</p></div><div><h3>관찰한 순서와 판단 근거를 확인하세요</h3><p>초록색은 읽힌 청구기호 사이의 순서가 일치한다는 뜻입니다. 검사 중에는 촬영 이미지를 고정합니다. 다시 비추기로 카메라에 돌아갈 수 있습니다.</p></div></section>
+    <p class="privacy">서버 사진 검사에서는 JPEG 사진을 Jetson에 전송합니다. 서버는 사진을 파일로 저장하지 않으며, OCR 문자열과 배열 순서만 Gadia에 전달합니다. AI 비밀키는 서버에서만 관리합니다. 스마트폰 카메라는 HTTPS 연결이 필요합니다.</p>
+  </main>
+  <footer><span>서가 렌즈 · Library Detector</span><a href="https://lib2.ewha.ac.kr/newsletter/200312/tips.html" target="_blank" rel="noopener">자료 배열 규칙 참고 ↗</a></footer>
+  <script type="module" src="src/app.mjs"></script>
+</body>
+</html>

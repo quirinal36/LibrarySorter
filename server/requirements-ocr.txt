@@ -1,0 +1,12 @@
+# Install only after Jetson-compatible torch and torchvision are available.
+# EasyOCR is installed separately with --no-deps to preserve those builds.
+-r requirements.txt
+numpy
+opencv-python-headless
+scipy
+scikit-image
+python-bidi
+PyYAML
+Shapely
+pyclipper
+ninja

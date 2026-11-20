@@ -1,0 +1,63 @@
+# Local secrets (keep placeholder examples in version control)
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Python environments, bytecode and tooling caches
+.venv*/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# JavaScript dependencies and test output
+node_modules/
+coverage/
+playwright-report/
+test-results/
+
+# Downloaded OCR weights and local CUDA build artifacts
+.EasyOCR/
+.cache/
+*.whl
+*.pth
+*.pt
+*.onnx
+*.engine
+*.plan
+
+# Generated builds and deployment packages
+build/
+dist/
+/artifacts/
+/_site/
+
+# Local runtime output and temporary photo uploads
+logs/
+*.log
+*.pid
+tmp/
+temp/
+/server/uploads/
+/server/captures/
+
+# Editor and operating-system temporary files
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+~$*
+
+# Keep application data and source documents tracked:
+# books.json, PRD.md, *.xlsx, *.pdf, requirements*.txt and lock files.
