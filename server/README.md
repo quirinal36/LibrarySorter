@@ -1,5 +1,7 @@
 # Jetson 사진 검사 서버
 
+로컬 Jetson을 스마트폰에 HTTPS로 연결하려면 [Tailscale 설정 안내](../docs/TAILSCALE_SETUP.md)를 따라가세요.
+
 스마트폰은 JPEG 사진을 전송하고 결과를 같은 촬영 사진 위에 표시합니다.
 서버는 분할 확대·명암 보정 → 한·영 OCR → 라벨 좌표/청구기호 추출 → Gadia AI
 규칙 판정을 수행합니다. books.json이나 원래 책 위치를 읽지 않습니다.
